@@ -46,7 +46,6 @@ static uint8_t set_result_sign_message() {
     return SIGNATURE_LENGTH;
 }
 
-
 //////////////////////////////////////////////////////////////////////
 
 UX_STEP_CB(ux_approve_step,
@@ -214,7 +213,7 @@ void handle_sign_message_ui(volatile unsigned int *flags) {
         if (G_called_from_swap) {
             if (G_swap_response_ready) {
                 // Safety against trying to make the app sign multiple TX
-                PRINTF("Safety agains double signing triggered\n");
+                PRINTF("Safety against double signing triggered\n");
                 os_sched_exit(-1);
             } else {
                 // We will quit the app after this transaction, whether it succeeds or fails
