@@ -31,6 +31,7 @@
 ApduCommand G_command;
 unsigned char G_io_seproxyhal_spi_buffer[IO_SEPROXYHAL_BUFFER_SIZE_B];
 volatile bool G_called_from_swap;
+volatile bool G_swap_response_ready;
 
 static void reset_main_globals(void) {
     MEMCLEAR(G_command);
@@ -105,7 +106,6 @@ void app_main(void) {
     // APDU injection faults.
     for (;;) {
         volatile unsigned short sw = 0;
-
         BEGIN_TRY {
             TRY {
                 rx = tx;
@@ -113,6 +113,12 @@ void app_main(void) {
                          // an error
                 rx = io_exchange(CHANNEL_APDU | flags, rx);
                 flags = 0;
+
+                if (G_called_from_swap && G_swap_response_ready) {
+                    PRINTF("Quitting app started in swap mode\n");
+                    // Quit app, we are in limited mode and our work is done
+                    os_sched_exit(0);
+                }
 
                 // no apdu received, well, reset the session, and reset the
                 // bootloader configuration
@@ -128,7 +134,6 @@ void app_main(void) {
                 THROW(ApduReplySdkExceptionIoReset);
             }
             CATCH_OTHER(e) {
-                G_called_from_swap = false;
                 switch (e & 0xF000) {
                     case 0x6000:
                         sw = e;
@@ -316,6 +321,7 @@ void coin_main(void) {
 
 static void start_app_from_lib(void) {
     G_called_from_swap = true;
+    G_swap_response_ready = false;
     UX_INIT();
     io_seproxyhal_init();
     nv_app_state_init();

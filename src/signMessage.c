@@ -140,12 +140,6 @@ void handle_sign_message_parse_message(volatile unsigned int *tx) {
         //*tx = set_result_sign_message();
         // THROW(ApduReplySuccess);
         UNUSED(tx);
-    }
-
-    if ((G_command.non_confirm || G_called_from_swap) &&
-        !(G_command.non_confirm && G_called_from_swap)) {
-        // User validation bypass requested NOT in swap context
-        // Or user validation requested while in swap context
         THROW(ApduReplySdkNotSupported);
     }
 
@@ -180,9 +174,8 @@ static bool check_swap_validity(const SummaryItemKind_t kinds[MAX_TRANSACTION_SU
                                 size_t num_summary_steps) {
     bool amount_ok = false;
     bool recipient_ok = false;
-    bool fee_payer_ok = false;
-    if (num_summary_steps != 3) {
-        PRINTF("3 steps expected for transaction in swap context, not %u\n", num_summary_steps);
+    if (num_summary_steps != 2) {
+        PRINTF("2 steps expected for transaction in swap context, not %u\n", num_summary_steps);
         return false;
     }
     for (size_t i = 0; i < num_summary_steps; ++i) {
@@ -201,19 +194,17 @@ static bool check_swap_validity(const SummaryItemKind_t kinds[MAX_TRANSACTION_SU
             case SummaryItemPubkey:
                 if (strcmp(G_transaction_summary_title, "Recipient") == 0) {
                     recipient_ok = check_swap_recipient(G_transaction_summary_text);
-                } else if (strcmp(G_transaction_summary_title, "Fee payer") == 0) {
-                    fee_payer_ok = check_swap_fee_payer(G_transaction_summary_text);
                 } else {
                     PRINTF("Refused field '%s'\n", G_transaction_summary_title);
                     return false;
                 }
                 break;
             default:
-                PRINTF("Refused kind '%u'\n", SummaryItemAmount);
+                PRINTF("Refused kind '%u'\n", kinds[i]);
                 return false;
         }
     }
-    return amount_ok && recipient_ok && fee_payer_ok;
+    return amount_ok && recipient_ok;
 }
 
 void handle_sign_message_ui(volatile unsigned int *flags) {
@@ -224,12 +215,20 @@ void handle_sign_message_ui(volatile unsigned int *flags) {
         // If we are in swap context, do not redisplay the message data
         // Instead, ensure they are identitical with what was previously displayed
         if (G_called_from_swap) {
-            if (check_swap_validity(summary_step_kinds, num_summary_steps)) {
-                send_result_sign_message();
-                // Quit app, we are in limited mode and our work is done
-                os_sched_exit(0);
+            if (G_swap_response_ready) {
+                // Safety against trying to make the app sign multiple TX
+                PRINTF("Safety agains double signing triggered\n");
+                os_sched_exit(-1);
             } else {
-                PRINTF("Refused blind signing incorrect Swap transaction\n");
+                // We will quit the app after this transaction, whether it succeeds or fails
+                PRINTF("Swap response is ready, the app will quit after the next send\n");
+                G_swap_response_ready = true;
+            }
+            if (check_swap_validity(summary_step_kinds, num_summary_steps)) {
+                PRINTF("Valid swap transaction signed\n");
+                send_result_sign_message();
+            } else {
+                PRINTF("Refused signing incorrect Swap transaction\n");
                 THROW(ApduReplySolanaSummaryFinalizeFailed);
             }
         } else {

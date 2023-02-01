@@ -1,7 +1,7 @@
 import base58
 
-from ragger.bip import pack_derivation_path
 from ragger.utils import create_currency_config
+from ragger.bip import pack_derivation_path
 
 ### Some utilities functions for amounts conversions ###
 
