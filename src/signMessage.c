@@ -46,22 +46,19 @@ static uint8_t set_result_sign_message() {
     return SIGNATURE_LENGTH;
 }
 
-static void send_result_sign_message(void) {
-    sendResponse(set_result_sign_message(), true);
-}
 
 //////////////////////////////////////////////////////////////////////
 
 UX_STEP_CB(ux_approve_step,
            pb,
-           send_result_sign_message(),
+           sendResponse(set_result_sign_message(), true, true),
            {
                &C_icon_validate_14,
                "Approve",
            });
 UX_STEP_CB(ux_reject_step,
            pb,
-           sendResponse(0, false),
+           sendResponse(0, false, true),
            {
                &C_icon_crossmark,
                "Reject",
@@ -226,7 +223,7 @@ void handle_sign_message_ui(volatile unsigned int *flags) {
             }
             if (check_swap_validity(summary_step_kinds, num_summary_steps)) {
                 PRINTF("Valid swap transaction signed\n");
-                send_result_sign_message();
+                sendResponse(set_result_sign_message(), true, false);
             } else {
                 PRINTF("Refused signing incorrect Swap transaction\n");
                 THROW(ApduReplySolanaSummaryFinalizeFailed);

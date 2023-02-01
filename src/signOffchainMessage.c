@@ -118,14 +118,14 @@ UX_STEP_NOCB(ux_sign_msg_text_step,
              });
 UX_STEP_CB(ux_sign_msg_approve_step,
            pb,
-           sendResponse(set_result_sign_message(), true),
+           sendResponse(set_result_sign_message(), true, true),
            {
                &C_icon_validate_14,
                "Approve",
            });
 UX_STEP_CB(ux_sign_msg_reject_step,
            pb,
-           sendResponse(0, false),
+           sendResponse(0, false, true),
            {
                &C_icon_crossmark,
                "Reject",
