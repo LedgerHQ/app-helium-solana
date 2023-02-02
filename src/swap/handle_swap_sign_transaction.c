@@ -7,14 +7,12 @@ typedef struct swap_validated_s {
     bool initialized;
     uint64_t amount;
     char recipient[BASE58_PUBKEY_LENGTH];
-    // uint64_t fees;
-    // char extra_id[20];
 } swap_validated_t;
 
 static swap_validated_t G_swap_validated;
 
 // Save the data validated during the Exchange app flow
-bool copy_transaction_parameters(create_transaction_parameters_t *params) {
+bool copy_transaction_parameters(const create_transaction_parameters_t *params) {
     // Ensure no subcoin configuration
     if (params->coin_configuration != NULL || params->coin_configuration_length != 0) {
         PRINTF("No coin_configuration expected\n");
@@ -37,7 +35,7 @@ bool copy_transaction_parameters(create_transaction_parameters_t *params) {
     memset(&swap_validated, 0, sizeof(swap_validated));
 
     // Save recipient
-    strncpy(swap_validated.recipient,
+    strlcpy(swap_validated.recipient,
             params->destination_address,
             sizeof(swap_validated.recipient));
     if (swap_validated.recipient[sizeof(swap_validated.recipient) - 1] != '\0') {
@@ -49,11 +47,6 @@ bool copy_transaction_parameters(create_transaction_parameters_t *params) {
     if (!swap_str_to_u64(params->amount, params->amount_length, &swap_validated.amount)) {
         return false;
     }
-
-    // TODO: what to do with fees ???
-    // if (!swap_str_to_u64(params->fee_amount, params->fee_amount_length, &swap_validated.fee)) {
-    //     return false;
-    // }
 
     swap_validated.initialized = true;
 
@@ -95,15 +88,4 @@ bool check_swap_recipient(const char *recipient) {
         PRINTF("Recipient validated in swap = %s\n", G_swap_validated.recipient);
         return false;
     }
-}
-
-// What to do with fees ?
-bool check_swap_fee_payer(const char *fee_payer) {
-    if (!G_swap_validated.initialized) {
-        return false;
-    }
-
-    // TODO ?
-    PRINTF("Fee payer requested in this transaction = %s\n", fee_payer);
-    return true;
 }

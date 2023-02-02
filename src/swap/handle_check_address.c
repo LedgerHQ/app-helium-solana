@@ -23,7 +23,7 @@ static int derive_public_key(const uint8_t *buffer,
     return encode_base58(public_key, PUBKEY_LENGTH, public_key_str, BASE58_PUBKEY_LENGTH);
 }
 
-int handle_check_address(check_address_parameters_t *params) {
+int handle_check_address(const check_address_parameters_t *params) {
     PRINTF("Inside Solana handle_check_address\n");
     PRINTF("Params on the address %d\n", (unsigned int) params);
 
