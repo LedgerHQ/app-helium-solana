@@ -60,7 +60,7 @@ jobs:
           path: scan-build
 
   python_tests_nano:
-    name: NanoS Ragger tests
+    name: Ragger tests
     needs: build_application
     runs-on: ubuntu-latest
     steps:

@@ -183,7 +183,8 @@ static bool check_swap_validity(const SummaryItemKind_t kinds[MAX_TRANSACTION_SU
                 if (strcmp(G_transaction_summary_title, "Transfer") == 0) {
                     amount_ok = check_swap_amount(G_transaction_summary_text);
                 } else {
-                    PRINTF("Refused field '%s', expecting 'Transfer'\n", G_transaction_summary_title);
+                    PRINTF("Refused field '%s', expecting 'Transfer'\n",
+                           G_transaction_summary_title);
                     return false;
                 }
                 break;
@@ -191,7 +192,8 @@ static bool check_swap_validity(const SummaryItemKind_t kinds[MAX_TRANSACTION_SU
                 if (strcmp(G_transaction_summary_title, "Recipient") == 0) {
                     recipient_ok = check_swap_recipient(G_transaction_summary_text);
                 } else {
-                    PRINTF("Refused field '%s', expecting 'Recipient'\n", G_transaction_summary_title);
+                    PRINTF("Refused field '%s', expecting 'Recipient'\n",
+                           G_transaction_summary_title);
                     return false;
                 }
                 break;

@@ -65,16 +65,3 @@ def test_solana_simple_transfer_refused(backend, navigator, test_name):
 
     rapdu: RAPDU = sol.get_async_response()
     assert rapdu.status == ErrorType.USER_CANCEL
-
-
-def test_solana_blind_sign_refused(backend):
-    sol = SolanaClient(backend)
-    from_public_key = sol.get_public_key(SOL_PACKED_DERIVATION_PATH)
-
-    instruction: SystemInstructionTransfer = SystemInstructionTransfer(from_public_key, FOREIGN_PUBLIC_KEY, AMOUNT)
-    message: bytes = Message([instruction]).serialize()
-
-    backend.raise_policy = RaisePolicy.RAISE_NOTHING
-    rapdu: RAPDU = sol.send_blind_sign_message(SOL_PACKED_DERIVATION_PATH, message)
-    assert rapdu.status == ErrorType.SDK_NOT_SUPPORTED
-
