@@ -176,26 +176,14 @@ static bool check_swap_validity(const SummaryItemKind_t kinds[MAX_TRANSACTION_SU
     }
     for (size_t i = 0; i < num_summary_steps; ++i) {
         transaction_summary_display_item(i, DisplayFlagNone | DisplayFlagLongPubkeys);
-        PRINTF("G_transaction_summary_title = %s\n", G_transaction_summary_title);
-        PRINTF("G_transaction_summary_text = %s\n", G_transaction_summary_text);
         switch (kinds[i]) {
             case SummaryItemAmount:
-                if (strcmp(G_transaction_summary_title, "Transfer") == 0) {
-                    amount_ok = check_swap_amount(G_transaction_summary_text);
-                } else {
-                    PRINTF("Refused field '%s', expecting 'Transfer'\n",
-                           G_transaction_summary_title);
-                    return false;
-                }
+                amount_ok =
+                    check_swap_amount(G_transaction_summary_title, G_transaction_summary_text);
                 break;
             case SummaryItemPubkey:
-                if (strcmp(G_transaction_summary_title, "Recipient") == 0) {
-                    recipient_ok = check_swap_recipient(G_transaction_summary_text);
-                } else {
-                    PRINTF("Refused field '%s', expecting 'Recipient'\n",
-                           G_transaction_summary_title);
-                    return false;
-                }
+                recipient_ok =
+                    check_swap_recipient(G_transaction_summary_title, G_transaction_summary_text);
                 break;
             default:
                 PRINTF("Refused kind '%u'\n", kinds[i]);

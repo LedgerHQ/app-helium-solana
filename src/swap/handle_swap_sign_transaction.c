@@ -56,8 +56,13 @@ bool copy_transaction_parameters(const create_transaction_parameters_t *params) 
 }
 
 // Check that the amount in parameter is the same as the previously saved amount
-bool check_swap_amount(const char *amount) {
+bool check_swap_amount(const char *title, const char *text) {
     if (!G_swap_validated.initialized) {
+        return false;
+    }
+
+    if (strcmp(title, "Transfer") != 0) {
+        PRINTF("Refused field '%s', expecting 'Transfer'\n", title);
         return false;
     }
 
@@ -66,25 +71,31 @@ bool check_swap_amount(const char *amount) {
         PRINTF("Conversion failed\n");
         return false;
     }
-    if (strcmp(amount, validated_amount) == 0) {
+
+    if (strcmp(text, validated_amount) == 0) {
         return true;
     } else {
-        PRINTF("Amount requested in this transaction = %s\n", amount);
+        PRINTF("Amount requested in this transaction = %s\n", text);
         PRINTF("Amount validated in swap = %s\n", validated_amount);
         return false;
     }
 }
 
 // Check that the recipient in parameter is the same as the previously saved recipient
-bool check_swap_recipient(const char *recipient) {
+bool check_swap_recipient(const char *title, const char *text) {
     if (!G_swap_validated.initialized) {
         return false;
     }
 
-    if (strcmp(G_swap_validated.recipient, recipient) == 0) {
+    if (strcmp(title, "Recipient") != 0) {
+        PRINTF("Refused field '%s', expecting 'Recipient'\n", title);
+        return false;
+    }
+
+    if (strcmp(G_swap_validated.recipient, text) == 0) {
         return true;
     } else {
-        PRINTF("Recipient requested in this transaction = %s\n", recipient);
+        PRINTF("Recipient requested in this transaction = %s\n", text);
         PRINTF("Recipient validated in swap = %s\n", G_swap_validated.recipient);
         return false;
     }
