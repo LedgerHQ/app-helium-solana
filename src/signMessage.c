@@ -203,6 +203,8 @@ void handle_sign_message_ui(volatile unsigned int *flags) {
         if (G_called_from_swap) {
             if (G_swap_response_ready) {
                 // Safety against trying to make the app sign multiple TX
+                // This code should never be triggered as the app is supposed to exit after
+                // sending the signed transaction
                 PRINTF("Safety against double signing triggered\n");
                 os_sched_exit(-1);
             } else {
