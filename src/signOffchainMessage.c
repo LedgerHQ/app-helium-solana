@@ -12,6 +12,9 @@
 #include "globals.h"
 #include "apdu.h"
 
+// Store locally the derived public key content
+static Pubkey G_publicKey;
+
 /**
  * Checks if data is in UTF-8 format.
  * Adapted from: https://www.cl.cam.ac.uk/~mgk25/ucs/utf8_check.c
@@ -221,11 +224,10 @@ void handle_sign_offchain_message(volatile unsigned int *flags, volatile unsigne
         summary_item_set_u64(transaction_summary_general_item(), "Size", header.length);
         summary_item_set_hash(transaction_summary_general_item(), "Hash", &G_command.message_hash);
 
-        Pubkey signer_pubkey;
-        get_public_key(signer_pubkey.data,
+        get_public_key(G_publicKey.data,
                        G_command.derivation_path,
                        G_command.derivation_path_length);
-        summary_item_set_pubkey(transaction_summary_general_item(), "Signer", &signer_pubkey);
+        summary_item_set_pubkey(transaction_summary_general_item(), "Signer", &G_publicKey);
     } else if (!is_ascii) {
         summary_item_set_hash(transaction_summary_general_item(), "Hash", &G_command.message_hash);
     }
