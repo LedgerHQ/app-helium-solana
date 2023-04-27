@@ -1,5 +1,6 @@
 #include "handle_swap_sign_transaction.h"
 #include "utils.h"
+#include "os.h"
 #include "swap_lib_calls.h"
 #include "sol/printer.h"
 
@@ -50,6 +51,7 @@ bool copy_transaction_parameters(const create_transaction_parameters_t *params) 
 
     swap_validated.initialized = true;
 
+    os_explicit_zero_BSS_segment();
     // Commit from stack to global data, params becomes tainted but we won't access it anymore
     memcpy(&G_swap_validated, &swap_validated, sizeof(swap_validated));
     return true;
