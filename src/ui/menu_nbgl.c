@@ -48,6 +48,11 @@ enum {
 #define SETTINGS_PAGE_NUMBER 2
 static bool settings_nav_callback(uint8_t page, nbgl_pageContent_t* content) {
     if (page == 0) {
+        content->type = INFOS_LIST;
+        content->infosList.nbInfos = ARRAY_COUNT(info_types);
+        content->infosList.infoTypes = info_types;
+        content->infosList.infoContents = info_contents;
+    } else if (page == 1) {
         // Read again the NVM as the value might have changed following a user touch
         if (N_storage.settings.allow_blind_sign == BlindSignDisabled) {
             G_switches[BLIND_SIGNING_IDX].initState = OFF_STATE;
@@ -67,11 +72,6 @@ static bool settings_nav_callback(uint8_t page, nbgl_pageContent_t* content) {
         content->type = SWITCHES_LIST;
         content->switchesList.nbSwitches = NB_SETTINGS;
         content->switchesList.switches = G_switches;
-    } else if (page == 1) {
-        content->type = INFOS_LIST;
-        content->infosList.nbInfos = ARRAY_COUNT(info_types);
-        content->infosList.infoTypes = info_types;
-        content->infosList.infoContents = info_contents;
     } else {
         return false;
     }
@@ -136,7 +136,7 @@ static void ui_menu_settings(void) {
 void ui_idle(void) {
     nbgl_useCaseHome(APPNAME,
                      &C_icon_solana_64x64,
-                     "This app confirms actions on\nthe " APPNAME " network.",
+                     NULL,
                      true,
                      ui_menu_settings,
                      quit_app_callback);
