@@ -28,6 +28,7 @@
 
 #include "apdu.h"
 #include "ui_api.h"
+#include "handle_swap_sign_transaction.h"
 #include "io.h"
 
 #ifdef HAVE_BAGL
@@ -108,11 +109,27 @@ uint16_t io_exchange_al(uint8_t channel, uint16_t tx_len) {
     return 0;
 }
 
-void sendResponse(uint8_t tx, bool approve, bool display_menu) {
-    G_io_apdu_buffer[tx++] = approve ? 0x90 : 0x69;
-    G_io_apdu_buffer[tx++] = approve ? 0x00 : 0x85;
+static void write_u16_be(uint8_t *ptr, size_t offset, uint16_t value) {
+    ptr[offset + 0] = (uint8_t) (value >> 8);
+    ptr[offset + 1] = (uint8_t) (value >> 0);
+}
+
+void sendResponse(uint8_t tx, uint16_t sw, bool display_menu) {
+    // Write status word
+    write_u16_be(G_io_apdu_buffer, tx, sw);
+    tx += 2;
+
     // Send back the response, do not restart the event loop
     io_exchange(CHANNEL_APDU | IO_RETURN_AFTER_TX, tx);
+
+    // If started in swap mode and one TX request has been processed (success or fail),
+    // we quit the app after sending the status reply
+    if (G_called_from_swap && G_swap_response_ready) {
+        PRINTF("Quitting app started in swap mode\n");
+        // Quit app, we are in limited mode and our work is done
+        finalize_exchange_sign_transaction(sw == ApduReplySuccess);
+    }
+
     if (display_menu) {
         // Display back the original UX
         ui_idle();

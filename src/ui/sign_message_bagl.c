@@ -40,7 +40,7 @@ UX_STEP_NOCB_INIT(ux_summary_step,
 // Approve and sign screen
 UX_STEP_CB(ux_approve_step,
            pb,
-           sendResponse(set_result_sign_message(), true, true),
+           sendResponse(set_result_sign_message(), ApduReplySuccess, true),
            {
                &C_icon_validate_14,
                "Approve",
@@ -49,7 +49,7 @@ UX_STEP_CB(ux_approve_step,
 // Reject signature screen
 UX_STEP_CB(ux_reject_step,
            pb,
-           sendResponse(0, false, true),
+           sendResponse(0, ApduReplyUserRefusal, true),
            {
                &C_icon_crossmark,
                "Reject",

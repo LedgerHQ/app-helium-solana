@@ -19,6 +19,7 @@
 #ifdef HAVE_BAGL
 
 #include "handle_get_pubkey.h"
+#include "apdu.h"
 #include "io.h"
 #include "ux.h"
 
@@ -30,14 +31,14 @@ UX_STEP_NOCB(ux_display_public_flow_5_step,
              });
 UX_STEP_CB(ux_display_public_flow_6_step,
            pb,
-           sendResponse(set_result_get_pubkey(), true, true),
+           sendResponse(set_result_get_pubkey(), ApduReplySuccess, true),
            {
                &C_icon_validate_14,
                "Approve",
            });
 UX_STEP_CB(ux_display_public_flow_7_step,
            pb,
-           sendResponse(0, false, true),
+           sendResponse(0, ApduReplyUserRefusal, true),
            {
                &C_icon_crossmark,
                "Reject",

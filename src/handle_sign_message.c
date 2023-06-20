@@ -139,11 +139,10 @@ void handle_sign_message_ui(volatile unsigned int *flags) {
             }
             if (check_swap_validity(summary_step_kinds, num_summary_steps)) {
                 PRINTF("Valid swap transaction signed\n");
-                sendResponse(set_result_sign_message(), true, false);
-                os_sched_exit(0);
+                sendResponse(set_result_sign_message(), ApduReplySuccess, false);
             } else {
                 PRINTF("Refused signing incorrect Swap transaction\n");
-                THROW(ApduReplySolanaSummaryFinalizeFailed);
+                sendResponse(0, ApduReplySolanaSummaryFinalizeFailed, false);
             }
         } else {
             start_sign_tx_ui(num_summary_steps);

@@ -114,12 +114,6 @@ void app_main(void) {
                 rx = io_exchange(CHANNEL_APDU | flags, rx);
                 flags = 0;
 
-                if (G_called_from_swap && G_swap_response_ready) {
-                    PRINTF("Quitting app started in swap mode\n");
-                    // Quit app, we are in limited mode and our work is done
-                    os_sched_exit(0);
-                }
-
                 // no apdu received, well, reset the session, and reset the
                 // bootloader configuration
                 if (rx == 0) {

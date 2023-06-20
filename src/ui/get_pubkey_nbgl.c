@@ -23,16 +23,17 @@
 #include "sol/printer.h"
 #include "nbgl_use_case.h"
 #include "ui_api.h"
+#include "apdu.h"
 
 static void confirm_address_approval(void) {
     // display a success status page and go back to main
-    sendResponse(set_result_get_pubkey(), true, false);
+    sendResponse(set_result_get_pubkey(), ApduReplySuccess, false);
     nbgl_useCaseStatus("ADDRESS\nVERIFIED", true, ui_idle);
 }
 
 static void confirm_address_rejection(void) {
     // display a status page and go back to main
-    sendResponse(0, false, false);
+    sendResponse(0, ApduReplyUserRefusal, false);
     nbgl_useCaseStatus("Address verification\ncancelled", false, ui_idle);
 }
 

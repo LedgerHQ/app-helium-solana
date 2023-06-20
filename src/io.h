@@ -20,4 +20,4 @@ uint8_t io_event(uint8_t channel);
 
 uint16_t io_exchange_al(uint8_t channel, uint16_t tx_len);
 
-void sendResponse(uint8_t tx, bool approve, bool display_menu);
+void sendResponse(uint8_t tx, uint16_t sw, bool display_menu);

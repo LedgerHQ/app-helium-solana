@@ -55,7 +55,7 @@ static const char *success_text;
 
 // Callback called when the user confirms the message rejection
 static void rejectChoice(void) {
-    sendResponse(0, false, false);
+    sendResponse(0, ApduReplyUserRefusal, false);
     nbgl_useCaseStatus(reject_choice_text, false, ui_idle);
 }
 
@@ -67,7 +67,7 @@ static void rejectUseCaseChoice(void) {
 // Callback called on the final review screen
 static void review_final_callback(bool confirmed) {
     if (confirmed) {
-        sendResponse(set_result_sign_message(), true, false);
+        sendResponse(set_result_sign_message(), ApduReplySuccess, false);
         nbgl_useCaseStatus(success_text, true, ui_idle);
     } else {
         rejectUseCaseChoice();
