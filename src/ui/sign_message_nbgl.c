@@ -23,7 +23,7 @@ static nbgl_layoutTagValueList_t layout;
 static nbgl_layoutTagValue_t current_pair;
 
 // We will display at most 4 items on a Stax review screen
-#define MAX_SIMULTANEOUS_DISPLAYED_SLOTS MAX_SIMULTANEOUS_DISPLAYED_SLOTS
+#define MAX_SIMULTANEOUS_DISPLAYED_SLOTS NB_MAX_DISPLAYED_PAIRS_IN_REVIEW
 typedef struct dynamic_slot_s {
     char title[sizeof(G_transaction_summary_title)];
     char text[sizeof(G_transaction_summary_text)];
