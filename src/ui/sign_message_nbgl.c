@@ -23,7 +23,7 @@ static nbgl_layoutTagValueList_t layout;
 static nbgl_layoutTagValue_t current_pair;
 
 // We will display at most 4 items on a Stax review screen
-#define MAX_SIMULTANEOUS_DISPLAYED_SLOTS 4
+#define MAX_SIMULTANEOUS_DISPLAYED_SLOTS MAX_SIMULTANEOUS_DISPLAYED_SLOTS
 typedef struct dynamic_slot_s {
     char title[sizeof(G_transaction_summary_title)];
     char text[sizeof(G_transaction_summary_text)];
@@ -144,7 +144,7 @@ void start_sign_tx_ui(size_t num_summary_steps) {
     // start display
     nbgl_useCaseReviewStart(&C_icon_solana_64x64,
                             "Review transaction",
-                            "",
+                            NULL,
                             "Reject transaction",
                             start_review,
                             rejectUseCaseChoice);
@@ -172,7 +172,7 @@ void start_sign_offchain_message_ui(bool is_ascii, size_t num_summary_steps) {
     // start display
     nbgl_useCaseReviewStart(&C_icon_solana_64x64,
                             "Review off-chain\nmessage",
-                            "",
+                            NULL,
                             "Reject message",
                             start_review,
                             rejectUseCaseChoice);
