@@ -28,6 +28,10 @@
 #include "handle_get_printable_amount.h"
 #include "handle_check_address.h"
 
+#ifdef HAVE_NBGL
+#include "nbgl_use_case.h"
+#endif
+
 ApduCommand G_command;
 unsigned char G_io_seproxyhal_spi_buffer[IO_SEPROXYHAL_BUFFER_SIZE_B];
 volatile bool G_called_from_swap;
@@ -230,6 +234,9 @@ static void start_app_from_lib(void) {
     G_called_from_swap = true;
     G_swap_response_ready = false;
     UX_INIT();
+#ifdef HAVE_NBGL
+    nbgl_useCaseSpinner("Signing");
+#endif  // HAVE_BAGL
     io_seproxyhal_init();
     nv_app_state_init();
     USB_power(0);
