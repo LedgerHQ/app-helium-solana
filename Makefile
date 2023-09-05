@@ -46,7 +46,7 @@ APPVERSION   = "$(APPVERSION_M).$(APPVERSION_N).$(APPVERSION_P)"
 ifeq ($(TARGET_NAME),TARGET_NANOS)
     ICONNAME=icons/nanos_app_helium.gif
 else ifeq ($(TARGET_NAME),TARGET_STAX)
-    ICONNAME=icons/stax_app_solana.gif
+    ICONNAME=icons/stax_app_helium.gif
 else
     ICONNAME=icons/nanox_app_helium.gif
 endif

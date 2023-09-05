@@ -281,6 +281,8 @@ static void library_main(libargs_t *args) {
     while (1) {
         BEGIN_TRY {
             TRY {
+                // DISABLED ON HELIUM FOR NOW
+                os_sched_exit(0);
                 if (!end) {
                     library_main_helper(args);
                 }

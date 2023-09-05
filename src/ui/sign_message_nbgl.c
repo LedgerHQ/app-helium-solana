@@ -126,8 +126,8 @@ static void start_review(void) {
 }
 
 void start_sign_tx_ui(size_t num_summary_steps) {
-    review_final_long_press.text = "Sign transaction on\nSolana network?";
-    review_final_long_press.icon = &C_icon_solana_64x64;
+    review_final_long_press.text = "Sign transaction on\nHelium network?";
+    review_final_long_press.icon = &C_icon_helium_64px;
     review_final_long_press.longPressText = "Hold to sign";
     review_final_long_press.longPressToken = 0;
     review_final_long_press.tuneId = TUNE_TAP_CASUAL;
@@ -142,7 +142,7 @@ void start_sign_tx_ui(size_t num_summary_steps) {
     transaction_steps_number = num_summary_steps;
     last_step_is_ascii = false;
     // start display
-    nbgl_useCaseReviewStart(&C_icon_solana_64x64,
+    nbgl_useCaseReviewStart(&C_icon_helium_64px,
                             "Review transaction",
                             NULL,
                             "Reject transaction",
@@ -151,8 +151,8 @@ void start_sign_tx_ui(size_t num_summary_steps) {
 }
 
 void start_sign_offchain_message_ui(bool is_ascii, size_t num_summary_steps) {
-    review_final_long_press.text = "Sign Off-Chain\nmessage on Solana\nnetwork?";
-    review_final_long_press.icon = &C_icon_solana_64x64;
+    review_final_long_press.text = "Sign Off-Chain\nmessage on Helium\nnetwork?";
+    review_final_long_press.icon = &C_icon_helium_64px;
     review_final_long_press.longPressText = "Hold to sign";
     review_final_long_press.longPressToken = 0;
     review_final_long_press.tuneId = TUNE_TAP_CASUAL;
@@ -170,7 +170,7 @@ void start_sign_offchain_message_ui(bool is_ascii, size_t num_summary_steps) {
         ++transaction_steps_number;
     }
     // start display
-    nbgl_useCaseReviewStart(&C_icon_solana_64x64,
+    nbgl_useCaseReviewStart(&C_icon_helium_64px,
                             "Review off-chain\nmessage",
                             NULL,
                             "Reject message",

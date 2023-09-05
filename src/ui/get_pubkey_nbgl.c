@@ -50,8 +50,8 @@ static void continue_review(void) {
 }
 
 void ui_get_public_key(void) {
-    nbgl_useCaseReviewStart(&C_icon_solana_64x64,
-                            "Verify Solana\naddress",
+    nbgl_useCaseReviewStart(&C_icon_helium_64px,
+                            "Verify Helium\naddress",
                             NULL,
                             "Cancel",
                             continue_review,

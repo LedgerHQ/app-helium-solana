@@ -134,12 +134,7 @@ static void ui_menu_settings(void) {
 }
 
 void ui_idle(void) {
-    nbgl_useCaseHome(APPNAME,
-                     &C_icon_solana_64x64,
-                     NULL,
-                     true,
-                     ui_menu_settings,
-                     quit_app_callback);
+    nbgl_useCaseHome(APPNAME, &C_icon_helium_64px, NULL, true, ui_menu_settings, quit_app_callback);
 }
 
 #endif

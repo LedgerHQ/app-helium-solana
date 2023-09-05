@@ -201,7 +201,7 @@ static void display_mode_data_selector(unsigned int idx) {
 UX_STEP_NOCB(ux_idle_flow_1_step,
              pnn,
              {
-                 &C_icon_solana_16x16,
+                 &C_icon_helium_16px,
                  "Application",
                  "is ready",
              });
