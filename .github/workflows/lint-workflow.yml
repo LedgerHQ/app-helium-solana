@@ -7,7 +7,6 @@ on:
       - master
       - develop
   pull_request:
-    types: [opened, synchronize, reopened]
 
 jobs:
   job_lint:
@@ -16,7 +15,7 @@ jobs:
 
     steps:
       - name: Clone
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Lint src
         uses: DoozyX/clang-format-lint-action@v0.13
@@ -37,7 +36,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Clone
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
         fetch-depth: 0
     - name: Check misspellings
@@ -46,4 +45,4 @@ jobs:
         # Use Config file when the github action supports it
         builtin: clear,rare
         check_filenames: true
-        skip: ./libsol,./tests
+        skip: ./libsol/printer_test.c,./tests/Cargo.lock
