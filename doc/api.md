@@ -1,5 +1,9 @@
 # Solana application : Common Technical Specifications
 
+## 1.4.0
+
+- Adapt this application for Helium
+
 ## 1.3.1
 
 - Add support for versioned messages
