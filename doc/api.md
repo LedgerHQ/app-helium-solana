@@ -1,8 +1,17 @@
 # Solana application : Common Technical Specifications
 
+## 1.4.0
+
+- Adapt this application for Helium
+
+## 1.3.1
+
+- Add support for versioned messages
+
 ## 1.3.0
 
 - Add SIGN SOLANA OFF-CHAIN MESSAGE
+- Add compatibility with the Exchange Application to SWAP, FUND, or SELL SOL tokens
 
 ## About
 

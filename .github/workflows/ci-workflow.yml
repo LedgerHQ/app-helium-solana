@@ -7,79 +7,23 @@ on:
       - master
       - develop
   pull_request:
-    types: [opened, synchronize, reopened]
 
 jobs:
   build_application:
-    strategy:
-      matrix:
-        sdk:
-        - path: $NANOS_SDK
-          name: nanos
-        - path: $NANOX_SDK
-          name: nanox
-        - path: $NANOSP_SDK
-          name: nanosp
+    name: Build application using the reusable workflow
+    uses: LedgerHQ/ledger-app-workflows/.github/workflows/reusable_build.yml@v1
+    with:
+      upload_app_binaries_artifact: compiled_app_binaries
+      run_for_devices: '["nanos", "nanox", "nanosp", "stax"]'
 
-    runs-on: ubuntu-latest
-
-    container:
-      image: ghcr.io/ledgerhq/ledger-app-builder/ledger-app-builder-lite:latest
-
-    steps:
-      - name: Clone
-        uses: actions/checkout@v2
-
-      - name: Build application
-        run: |
-          make BOLOS_SDK=${{ matrix.sdk.path }} DEBUG=1
-          cp bin/app.elf bin/solana_${{ matrix.sdk.name }}.elf
-
-      - name: Upload application binaries
-        uses: actions/upload-artifact@v2
-        with:
-          name: solana_binaries
-          path: ./bin/solana_${{ matrix.sdk.name }}.elf
-          if-no-files-found: error
-
-  job_scan_build:
-    name: Clang Static Analyzer
+  ragger_tests:
+    name: Run ragger tests using the reusable workflow
     needs: build_application
-    runs-on: ubuntu-latest
-    container:
-      image: ghcr.io/ledgerhq/ledger-app-builder/ledger-app-builder-lite:latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Build with Clang Static Analyzer
-        run: |
-          make clean
-          scan-build --use-cc=clang -analyze-headers -enable-checker security -enable-checker unix -enable-checker valist -o scan-build --status-bugs make default
-      - uses: actions/upload-artifact@v2
-        if: failure()
-        with:
-          name: scan-build
-          path: scan-build
-
-  python_tests_nano:
-    name: NanoS Ragger tests
-    needs: build_application
-    runs-on: ubuntu-latest
-    steps:
-      - name: Clone
-        uses: actions/checkout@v2
-      - name: Download all binaries
-        uses: actions/download-artifact@v2
-      - name: Gather artifacts
-        run: |
-          mkdir tests/elfs
-          mv *_binaries/*.elf tests/elfs
-      - name: Install APT dependencies
-        run: sudo apt-get update && sudo apt-get install -y qemu-user-static
-      - name: Install Ragger
-        run: |
-          pip install --extra-index-url https://test.pypi.org/simple/ -r tests/python/requirements.txt
-      - name: Run tests
-        run: pytest tests/python/ -v
+    uses: LedgerHQ/ledger-app-workflows/.github/workflows/reusable_ragger_tests.yml@v1
+    with:
+      download_app_binaries_artifact: compiled_app_binaries
+      test_dir: tests/python
+      run_for_devices: '["nanos", "nanox", "nanosp", "stax"]'
 
   job_C_test:
     name: C tests
@@ -88,6 +32,6 @@ jobs:
       image: ghcr.io/ledgerhq/ledger-app-builder/ledger-app-builder-legacy:latest
     steps:
       - name: Clone
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Build unit tests
         run: make -C libsol
